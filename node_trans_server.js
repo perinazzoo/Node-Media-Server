@@ -48,6 +48,7 @@ class NodeTransServer {
       apps += ' ';
     }
     context.nodeEvent.on('postPublish', this.onPostPublish.bind(this));
+    context.nodeEvent.on('donePublish', this.onDonePublish.bind(this));
     Logger.log(`Node Media Trans Server started for apps: [ ${apps}] , MediaRoot: ${this.config.http.mediaroot}, ffmpeg version: ${version}`);
   }
 
@@ -72,6 +73,13 @@ class NodeTransServer {
         });
         session.run();
       }
+    }
+  }
+
+  onDonePublish(id, streamPath, args) {
+    let session = this.transSessions.get(id);
+    if (session) {
+      session.end();
     }
   }
 }
